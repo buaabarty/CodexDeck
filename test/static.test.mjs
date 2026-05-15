@@ -63,5 +63,10 @@ test('docker workflow publishes to GHCR', async () => {
   const workflow = await text('.github/workflows/docker.yml');
   assert.match(workflow, /ghcr\.io/);
   assert.match(workflow, /buaabarty\/codexdeck/);
-  assert.match(workflow, /docker\/build-push-action@v6/);
+  assert.match(workflow, /docker\/build-push-action@[0-9a-f]{40}/);
+  const actionRefs = [...workflow.matchAll(/uses:\s+[\w-]+\/[\w.-]+@([^\s]+)/g)].map((match) => match[1]);
+  assert.ok(actionRefs.length >= 6);
+  for (const ref of actionRefs) {
+    assert.match(ref, /^[0-9a-f]{40}$/);
+  }
 });

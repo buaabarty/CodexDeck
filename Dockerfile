@@ -20,7 +20,7 @@ RUN npm ci --omit=dev
 
 FROM node:${NODE_VERSION} AS runtime
 
-ARG CODEX_CLI_VERSION=latest
+ARG CODEX_CLI_VERSION=0.130.0
 
 LABEL org.opencontainers.image.title="CodexDeck"
 LABEL org.opencontainers.image.description="Browser-first control deck for local Codex CLI sessions."
