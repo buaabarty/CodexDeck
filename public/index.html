@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex Local Control</title>
+    <link rel="stylesheet" href="/vendor/xterm/xterm.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260515-control3" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar collapsed">
+        <header class="brand">
+          <div>
+            <h1>Codex Control</h1>
+            <p id="machine">Not connected</p>
+          </div>
+          <div class="brand-actions">
+            <button id="toggle-sidebar" class="icon-button" title="Toggle controls">Controls</button>
+            <button id="refresh" class="icon-button" title="Refresh">Refresh</button>
+          </div>
+        </header>
+
+        <div id="controls" class="controls">
+        <section class="panel compact-panel">
+          <h2>New Session</h2>
+          <form id="session-form" class="form">
+            <label>
+              Name
+              <input name="name" placeholder="codex-main" autocomplete="off" />
+            </label>
+            <label>
+              Workdir
+              <input name="cwd" id="cwd" autocomplete="off" />
+            </label>
+            <label>
+              Mode
+              <select name="mode">
+                <option value="new">new interactive</option>
+                <option value="resume-last">resume last</option>
+                <option value="resume-picker">resume picker</option>
+                <option value="fork-last">fork last</option>
+                <option value="exec">exec prompt</option>
+              </select>
+            </label>
+            <div class="split">
+              <label>
+                Model
+                <input name="model" placeholder="default" autocomplete="off" />
+              </label>
+              <label>
+                Sandbox
+                <select name="sandbox">
+                  <option value="">default</option>
+                  <option value="workspace-write">workspace-write</option>
+                  <option value="read-only">read-only</option>
+                  <option value="danger-full-access">danger-full-access</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Approval
+              <select name="approval">
+                <option value="">default</option>
+                <option value="on-request">on-request</option>
+                <option value="never">never</option>
+                <option value="untrusted">untrusted</option>
+              </select>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="search" />
+              <span>Enable web search</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" name="noAltScreen" checked />
+              <span>Inline terminal mode</span>
+            </label>
+            <label>
+              Prompt
+              <textarea name="prompt" rows="4" placeholder="Optional initial prompt"></textarea>
+            </label>
+            <button type="submit" class="primary">Start Codex</button>
+          </form>
+        </section>
+
+        <section class="panel grow">
+          <div class="section-heading">
+            <h2>Recent Threads</h2>
+            <span id="thread-count">0</span>
+          </div>
+          <div id="threads" class="list"></div>
+        </section>
+
+        <section class="panel grow">
+          <div class="section-heading">
+            <h2>Managed Sessions</h2>
+            <span id="session-count">0</span>
+          </div>
+          <div id="sessions" class="list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <h2>Local Codex Processes</h2>
+            <span id="process-count">0</span>
+          </div>
+          <div id="processes" class="list compact"></div>
+        </section>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="toolbar">
+          <div class="toolbar-status">
+            <div class="session-line">
+              <strong id="active-title">No session</strong>
+              <span id="active-status" class="status-pill idle">Detached</span>
+              <span id="live-indicator" class="live-indicator idle">Idle</span>
+            </div>
+            <span id="active-subtitle" class="session-subtitle">Tap Sessions to attach or resume.</span>
+          </div>
+          <div class="toolbar-actions">
+            <button id="open-sessions" type="button" title="Open sessions" onclick="window.codexOpenSessions ? window.codexOpenSessions() : (document.getElementById('session-sheet').hidden = false)">Sessions</button>
+            <button id="view-page" type="button" title="Stream view">Stream</button>
+            <button id="view-terminal" type="button" title="Terminal view">Term</button>
+            <details class="more-menu">
+              <summary>More</summary>
+              <div class="more-menu-panel">
+                <button id="send-ctrl-c" type="button" title="Send Ctrl-C">Ctrl-C</button>
+                <button id="send-ctrl-d" type="button" title="Send Ctrl-D">Ctrl-D</button>
+                <button id="terminate" type="button" class="danger" title="Terminate attached process">Terminate</button>
+              </div>
+            </details>
+          </div>
+        </header>
+        <div class="mobile-keys">
+          <button data-key="up" title="Arrow up">Up</button>
+          <button data-key="down" title="Arrow down">Down</button>
+          <button data-key="left" title="Arrow left">Left</button>
+          <button data-key="right" title="Arrow right">Right</button>
+          <button data-key="enter" title="Enter">Enter</button>
+          <button data-key="esc" title="Escape">Esc</button>
+          <button data-key="tab" title="Tab">Tab</button>
+        </div>
+        <div id="session-sheet" class="session-sheet" hidden aria-hidden="true">
+          <div class="sheet-panel">
+            <header class="sheet-header">
+              <div>
+                <strong>Connect Session</strong>
+                <span>Attach a running session or resume a recent thread.</span>
+              </div>
+              <button id="close-session-sheet" title="Close sessions">Close</button>
+            </header>
+            <section class="sheet-section">
+              <div class="section-heading">
+                <h2>Managed Sessions</h2>
+                <span id="quick-session-count">0</span>
+              </div>
+              <div id="quick-sessions" class="quick-list"></div>
+            </section>
+            <section class="sheet-section">
+              <div class="section-heading">
+                <h2>Recent Threads</h2>
+                <span id="quick-thread-count">0</span>
+              </div>
+              <div id="quick-threads" class="quick-list"></div>
+            </section>
+          </div>
+        </div>
+        <div id="page-view" class="page-view">
+          <div id="stream" class="stream"></div>
+          <form id="composer" class="composer">
+            <textarea id="composer-input" rows="3" placeholder="输入给 Codex，Enter 发送，Shift+Enter 换行"></textarea>
+            <button type="submit" class="primary">Send</button>
+          </form>
+        </div>
+        <div id="terminal" class="terminal-view"></div>
+      </section>
+    </main>
+
+    <div id="login" class="login">
+      <form id="login-form" class="login-box">
+        <h2>Sign In</h2>
+        <p>Use the local control account and 6-digit authenticator code.</p>
+        <input id="username-input" type="text" placeholder="Username" autocomplete="username" />
+        <input id="password-input" type="password" placeholder="Password" autocomplete="current-password" />
+        <input id="otp-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Authenticator code" autocomplete="one-time-code" />
+        <details>
+          <summary>Token fallback</summary>
+          <input id="token-input" type="password" placeholder="CODEX_CONTROL_TOKEN" autocomplete="off" />
+        </details>
+        <button type="submit" class="primary">Connect</button>
+        <div id="login-error" class="error"></div>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/vendor/xterm/xterm.js"></script>
+    <script src="/vendor/xterm-fit/addon-fit.js"></script>
+    <script src="/app.js?v=20260515-control3"></script>
+  </body>
+</html>

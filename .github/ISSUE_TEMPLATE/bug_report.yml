@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible CodexDeck issue.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste tokens, account files, private logs, or tunnel state.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction
+      description: List the smallest steps that reproduce the issue.
+      placeholder: |
+        1. Start CodexDeck with ...
+        2. Open ...
+        3. Click ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "OS, Node version, Codex CLI version, browser"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant sanitized logs
+      render: text

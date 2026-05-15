@@ -1,0 +1,59 @@
+{
+  "name": "codexdeck",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser-first control deck for local Codex CLI sessions.",
+  "license": "MIT",
+  "homepage": "https://github.com/buaabarty/CodexDeck#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/buaabarty/CodexDeck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/buaabarty/CodexDeck/issues"
+  },
+  "keywords": [
+    "codex",
+    "openai",
+    "agent",
+    "terminal",
+    "browser",
+    "remote-control",
+    "tailscale",
+    "pty",
+    "websocket"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "files": [
+    "public",
+    "server",
+    "scripts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "start": "node server/index.js",
+    "check": "node --check server/index.js && node --check public/app.js && node --check scripts/setup-account.mjs",
+    "test": "node --test",
+    "ci": "npm run check && npm test",
+    "release:dry": "npm pack --dry-run",
+    "start:tailnet": "scripts/start-tailnet.sh",
+    "start:public-auth": "scripts/start-public-auth.sh",
+    "setup:account": "node scripts/setup-account.mjs",
+    "tailscale:daemon": "scripts/tailscale-daemon.sh",
+    "tailscale:up": "scripts/tailscale-up.sh",
+    "tailscale:serve": "scripts/tailscale-serve-codex.sh"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "express": "^5.2.1",
+    "node-pty": "^1.1.0",
+    "socket.io": "^4.8.3"
+  }
+}

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use CodexDeck in research or publications, please cite it as below."
+title: "CodexDeck: Browser-first control for local Codex sessions"
+authors:
+  - family-names: "Barty"
+repository-code: "https://github.com/buaabarty/CodexDeck"
+url: "https://github.com/buaabarty/CodexDeck"
+version: "0.1.0"
+date-released: "2026-05-15"
+license: "MIT"

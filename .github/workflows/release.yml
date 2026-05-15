@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check and test
+        run: npm run ci
+
+      - name: Pack source archive
+        id: pack
+        run: |
+          package="$(npm pack)"
+          echo "package=$package" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          PACKAGE: ${{ steps.pack.outputs.package }}
+        run: |
+          gh release create "$TAG" "$PACKAGE" \
+            --title "CodexDeck $TAG" \
+            --generate-notes
