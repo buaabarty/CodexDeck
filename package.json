@@ -42,6 +42,7 @@
     "test": "node --test",
     "ci": "npm run check && npm test",
     "release:dry": "npm pack --dry-run",
+    "docker:build": "docker build -t codexdeck:local .",
     "start:tailnet": "scripts/start-tailnet.sh",
     "start:public-auth": "scripts/start-public-auth.sh",
     "setup:account": "node scripts/setup-account.mjs",

@@ -19,5 +19,6 @@ If that is not available, open a minimal issue asking for a private contact with
 - Bind to `127.0.0.1` by default.
 - Prefer SSH port forwarding or Tailscale Serve for remote access.
 - Use account + TOTP auth before any public tunnel.
+- Treat Docker mounts of `~/.codex`, workspaces, and `.runtime/` as sensitive.
 - Never commit `.runtime/`, `.tailscale/`, `.env`, account files, tokens, or tunnel state.
 - Treat anyone with CodexDeck access as able to operate local Codex sessions and local project files.
