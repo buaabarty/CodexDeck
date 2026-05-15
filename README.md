@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/buaabarty/CodexDeck/actions/workflows/ci.yml/badge.svg)](https://github.com/buaabarty/CodexDeck/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/buaabarty/CodexDeck?include_prereleases)](https://github.com/buaabarty/CodexDeck/releases)
+[![Docker](https://github.com/buaabarty/CodexDeck/actions/workflows/docker.yml/badge.svg)](https://github.com/buaabarty/CodexDeck/actions/workflows/docker.yml)
 [![License](https://img.shields.io/github/license/buaabarty/CodexDeck)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0-339933?logo=node.js&logoColor=white)](package.json)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI-Codex-412991?logo=openai&logoColor=white)](https://github.com/openai/codex)
@@ -68,6 +69,47 @@ CODEX_BIN=codex
 ```
 
 If `CODEX_CONTROL_TOKEN` is not set, CodexDeck generates a one-time token and prints it to the server log.
+
+## Docker Image
+
+CodexDeck publishes a reusable image to GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/buaabarty/codexdeck:latest
+```
+
+Run it against the current workspace:
+
+```bash
+docker run --rm -it \
+  -p 127.0.0.1:5900:5900 \
+  -e CODEX_CONTROL_TOKEN="$(openssl rand -base64 32)" \
+  -v "$PWD:/workspace" \
+  -v "$HOME/.codex:/home/node/.codex" \
+  ghcr.io/buaabarty/codexdeck:latest
+```
+
+The image includes Node.js, CodexDeck, common CLI tools, and the OpenAI Codex CLI. The container defaults to:
+
+```bash
+CODEX_CONTROL_HOST=0.0.0.0
+CODEX_CONTROL_PORT=5900
+CODEX_DEFAULT_CWD=/workspace
+```
+
+Mounting `~/.codex` gives the container access to your local Codex auth and session history. Treat that mount as sensitive. For account + TOTP mode, also mount a persistent runtime directory:
+
+```bash
+docker volume create codexdeck-runtime
+docker run --rm -it \
+  -p 127.0.0.1:5900:5900 \
+  -e CODEX_CONTROL_AUTH=account \
+  -e CODEX_CONTROL_ACCOUNT_FILE=/app/.runtime/account.json \
+  -v codexdeck-runtime:/app/.runtime \
+  -v "$PWD:/workspace" \
+  -v "$HOME/.codex:/home/node/.codex" \
+  ghcr.io/buaabarty/codexdeck:latest
+```
 
 ## Private Remote Access
 
